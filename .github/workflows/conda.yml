@@ -1,0 +1,97 @@
+name: Build Release
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - { target: linux-64, os: ubuntu-22.04 }
+          - { target: linux-arm64, os: ubuntu-22.04-arm }
+          - { target: win-64, os: windows-2022 }
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
+      # prevent running out of disk space on Ubuntu runners.
+      - name: Maximize build space
+        if: runner.os == 'Linux'
+        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793 # v5
+        with:
+          verbose: 'true'
+          remove-android: 'true'      # (frees ~9 GB)
+          remove-cached-tools: 'true' # (frees ~8.3 GB)
+
+      - name: Set platform environment variables
+        shell: bash -l {0}
+        env:
+          OPERATING_SYSTEM: ${{ runner.os }}
+        run: |
+          if [[ $OPERATING_SYSTEM == 'Windows' ]]; then
+            echo 'PIXI_CACHE_DIR=D:\rattler' >> "$GITHUB_ENV"
+            echo 'RATTLER_CACHE_DIR=D:\rattler' >> "$GITHUB_ENV"
+          fi
+
+      - name: Checkout source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: 'FreeCAD/FreeCAD'
+          ref: 'main'
+          fetch-depth: 2
+          fetch-tags: true
+          submodules: 'recursive'
+
+      - uses: prefix-dev/setup-pixi@d3f436a425481402e6a95a1d1fc10331c708cd9e # v0.10.2
+        with:
+          pixi-version: v0.68.1
+          cache: false
+
+      - name: Setup .NET 10 SDK
+        if: runner.os == 'Windows'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.103'
+
+      - name: Build packages
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_PLATFORM: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          python3 package/scripts/write_version_info.py ../freecad_version.txt
+          pixi run --locked "bash package/bundle/build.sh"
+
+      - name: Upload files
+        uses: actions/upload-artifact@v4
+        with:
+          name: conda-${{ matrix.target }}
+          path: package/rattler-build/.pixi/bld/freecad/*/output/${{ matrix.target }}/*.conda
+
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: conda-incubator/setup-miniconda@v4
+        with:
+          auto-update-conda: true
+
+      - name: Install Anaconda Client
+        run: conda install anaconda-client -y
+
+      - name: Collect files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: conda-*
+          merge-multiple: true
+
+      - name: Upload packages
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+        run: find . -name "*.conda" -exec $CONDA/bin/anaconda upload {} \;
