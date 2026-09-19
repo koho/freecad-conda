@@ -68,8 +68,7 @@ requirements:
   build:
     - ccache
     - cmake
-    - ${{ compiler("cxx") }}
-    - ${{ stdlib("c") }}
+    - compilers >=1.10,<1.11
     - doxygen
     - git
     - gtest
