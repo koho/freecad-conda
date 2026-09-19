@@ -162,6 +162,10 @@ requirements:
       then:
         - cross-python_${{ target_platform }}
 
+    - if: unix
+      then:
+        - sed
+
   host:
     - cpptrace
     - eigen >=3.3,<5
@@ -197,14 +201,13 @@ requirements:
       then:
         - pthreads-win32
 
-    - if: unix
-      then:
-        - sed
-
     - if: linux
       then:
         - libspnav
         - xorg-xproto
+        - libgl-devel
+        - libegl-devel
+        - xorg-libxi
 
   run:
     - av
