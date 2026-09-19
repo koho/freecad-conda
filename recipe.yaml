@@ -19,6 +19,8 @@ build:
                 export "${flags_var}=${!flags_var//-fno-merge-constants/}"
             fi
         done
+        export CXXFLAGS="${CXXFLAGS} -fopenmp=libomp"
+        export LDFLAGS="${LDFLAGS} -fopenmp=libomp"
         unset CMAKE_GENERATOR
         unset CMAKE_GENERATOR_PLATFORM
         cmake \
