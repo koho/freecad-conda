@@ -44,6 +44,7 @@ jobs:
         with:
           pixi-version: v0.68.1
           cache: false
+          run-install: false
 
       - name: Install rattler-build
         run: pixi global install rattler-build
