@@ -1,4 +1,4 @@
-name: Build Release
+name: Build Package
 on:
   workflow_dispatch:
 
@@ -39,22 +39,14 @@ jobs:
 
       - name: Checkout source
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          repository: 'FreeCAD/FreeCAD'
-          ref: 'main'
-          fetch-depth: 2
-          fetch-tags: true
-          submodules: 'recursive'
-
-      - name: Checkout source
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          path: conda-repo
 
       - uses: prefix-dev/setup-pixi@d3f436a425481402e6a95a1d1fc10331c708cd9e # v0.10.2
         with:
           pixi-version: v0.68.1
           cache: false
+
+      - name: Install rattler-build
+        run: pixi global install rattler-build
 
       - name: Setup .NET 10 SDK
         if: runner.os == 'Windows'
@@ -62,23 +54,19 @@ jobs:
         with:
           dotnet-version: '10.0.103'
 
-      - name: Build packages
+      - name: Build package
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_PLATFORM: ${{ matrix.target }}
-        run: |
-          set -euo pipefail
-          python3 package/scripts/write_version_info.py ../freecad_version.txt
-          cp -r conda-repo/rattler-build package/
-          cd package/rattler-build
-          pixi install --frozen
+        run: rattler-build build --recipe recipe.yaml -c conda-forge --output-dir output
 
       - name: Upload files
         uses: actions/upload-artifact@v4
         with:
           name: conda-${{ matrix.target }}
-          path: package/rattler-build/.pixi/bld/freecad/*/output/${{ matrix.target }}/*.conda
+          path: output/**/*.conda
+          if-no-files-found: error
 
   release:
     name: Release
