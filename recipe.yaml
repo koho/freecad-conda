@@ -19,8 +19,6 @@ build:
                 export "${flags_var}=${!flags_var//-fno-merge-constants/}"
             fi
         done
-        export CXXFLAGS="${CXXFLAGS} -fopenmp=libomp"
-        export LDFLAGS="${LDFLAGS} -fopenmp=libomp"
         unset CMAKE_GENERATOR
         unset CMAKE_GENERATOR_PLATFORM
         cmake \
@@ -40,6 +38,9 @@ build:
           -D Python_EXECUTABLE:FILEPATH="$PYTHON" \
           -D Python3_EXECUTABLE:FILEPATH="$PYTHON" \
           -D BUILD_DYNAMIC_LINK_PYTHON:BOOL=OFF \
+          -D OpenMP_CXX_FLAGS="-fopenmp=libomp" \
+          -D OpenMP_CXX_LIB_NAMES="omp" \
+          -D OpenMP_omp_LIBRARY="${PREFIX}/lib/libomp.so" \
           -B build \
           -S .
     
