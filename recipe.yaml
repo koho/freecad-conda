@@ -14,6 +14,11 @@ build:
   script:
     - if: unix
       then: |
+        for flags_var in CFLAGS CXXFLAGS DEBUG_CFLAGS DEBUG_CXXFLAGS; do
+            if [[ -n "${!flags_var:-}" ]]; then
+                export "${flags_var}=${!flags_var//-fno-merge-constants/}"
+            fi
+        done
         unset CMAKE_GENERATOR
         unset CMAKE_GENERATOR_PLATFORM
         cmake \
