@@ -154,6 +154,7 @@ requirements:
   host:
     - eigen >=3.3,<5
     - fmt
+    - expat
     - freetype
     - hdf5
     - lark
