@@ -11,7 +11,58 @@ source:
 
 build:
   number: 0
-  script: bash package/bundle/build.sh
+  script:
+    - if: unix
+      then: |
+        unset CMAKE_GENERATOR
+        unset CMAKE_GENERATOR_PLATFORM
+        cmake \
+          ${CMAKE_ARGS} \
+          ${CMAKE_PLATFORM_FLAGS[@]} \
+          --preset conda-linux-release \
+          -D CMAKE_IGNORE_PREFIX_PATH="/opt/homebrew;/usr/local/homebrew" \
+          -D CMAKE_INCLUDE_PATH:FILEPATH="${PREFIX}/include" \
+          -D CMAKE_INSTALL_LIBDIR:FILEPATH="${PREFIX}/lib" \
+          -D CMAKE_INSTALL_PREFIX:FILEPATH="${PREFIX}" \
+          -D CMAKE_LIBRARY_PATH:FILEPATH="${PREFIX}/lib" \
+          -D CMAKE_PREFIX_PATH:FILEPATH="${PREFIX}" \
+          -D RELATIVE_RPATH=ON \
+          -D INSTALL_TO_SITEPACKAGES:BOOL=ON \
+          -D OCC_INCLUDE_DIR:FILEPATH="${PREFIX}/include/opencascade" \
+          -D OCC_LIBRARY_DIR:FILEPATH="${PREFIX}/lib" \
+          -D Python_EXECUTABLE:FILEPATH="$PYTHON" \
+          -D Python3_EXECUTABLE:FILEPATH="$PYTHON" \
+          -D BUILD_DYNAMIC_LINK_PYTHON:BOOL=OFF \
+          -B build \
+          -S .
+    
+    - if: win
+      then: |
+        set "CMAKE_GENERATOR="
+        set "CMAKE_GENERATOR_PLATFORM="
+        cmake ^
+          %CMAKE_ARGS% ^
+          --preset conda-windows-release ^
+          -D CMAKE_C_COMPILER:STRING="%CC%" ^
+          -D CMAKE_CXX_COMPILER:STRING="%CXX%" ^
+          -D CMAKE_INCLUDE_PATH:FILEPATH="%LIBRARY_PREFIX%/include" ^
+          -D CMAKE_INSTALL_LIBDIR:FILEPATH="%LIBRARY_PREFIX%/lib" ^
+          -D CMAKE_INSTALL_PREFIX:FILEPATH="%LIBRARY_PREFIX%" ^
+          -D CMAKE_LIBRARY_PATH:FILEPATH="%LIBRARY_PREFIX%/lib" ^
+          -D CMAKE_PREFIX_PATH:FILEPATH="%LIBRARY_PREFIX%" ^
+          -D RELATIVE_RPATH=ON ^
+          -D INSTALL_TO_SITEPACKAGES:BOOL=ON ^
+          -D OCC_INCLUDE_DIR:FILEPATH="%LIBRARY_PREFIX%/include/opencascade" ^
+          -D OCC_LIBRARY_DIR:FILEPATH="%LIBRARY_PREFIX%/lib" ^
+          -D Python_EXECUTABLE:FILEPATH="%PYTHON%" ^
+          -D Python3_EXECUTABLE:FILEPATH="%PYTHON%" ^
+          -D SMESH_INCLUDE_DIR:FILEPATH="%LIBRARY_PREFIX%/include/smesh" ^
+          -D SMESH_LIBRARY:FILEPATH="%LIBRARY_PREFIX%/lib/SMESH.lib" ^
+          -B build ^
+          -S .
+
+    - cmake --build build
+    - cmake --install build
 
 requirements:
   build:
