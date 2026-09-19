@@ -194,6 +194,7 @@ requirements:
       then:
         - libspnav
         - xorg-xproto
+        - llvm-openmp
 
   run:
     - av
@@ -235,4 +236,5 @@ requirements:
       then:
         - libspnav
         - qt6-wayland
+        - llvm-openmp
         - xcb-util-cursor==0.1.5  ## hack to address https://github.com/FreeCAD/FreeCAD/issues/26726
