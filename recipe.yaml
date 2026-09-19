@@ -208,6 +208,7 @@ requirements:
         - libgl-devel
         - libegl-devel
         - xorg-libxi
+        - llvm-openmp
 
   run:
     - av
@@ -248,5 +249,6 @@ requirements:
     - if: linux
       then:
         - libspnav
+        - llvm-openmp
         - qt6-wayland >=6.8,<6.9
         - xcb-util-cursor ==0.1.5
