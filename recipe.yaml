@@ -27,6 +27,7 @@ build:
           -D CMAKE_LIBRARY_PATH:FILEPATH="${PREFIX}/lib" \
           -D CMAKE_PREFIX_PATH:FILEPATH="${PREFIX}" \
           -D RELATIVE_RPATH=ON \
+          -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF \
           -D INSTALL_TO_SITEPACKAGES:BOOL=ON \
           -D OCC_INCLUDE_DIR:FILEPATH="${PREFIX}/include/opencascade" \
           -D OCC_LIBRARY_DIR:FILEPATH="${PREFIX}/lib" \
