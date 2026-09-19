@@ -157,6 +157,7 @@ requirements:
         - cross-python_${{ target_platform }}
 
   host:
+    - av
     - eigen >=3.3,<5
     - fmt
     - expat
@@ -175,6 +176,7 @@ requirements:
     - python>=3.11,<3.12
     - qt6-main>=6.8,<6.9
     - six
+    - pip
     - smesh
     - vtk
     - xerces-c
