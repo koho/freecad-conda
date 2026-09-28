@@ -90,4 +90,4 @@ jobs:
       - name: Upload packages
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-        run: find . -name "*.conda" -exec $CONDA/bin/anaconda upload {} \;
+        run: find . -name "*.conda" -exec $CONDA/bin/anaconda upload --force {} \;
