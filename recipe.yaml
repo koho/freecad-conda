@@ -71,6 +71,7 @@ build:
 
     - cmake --build build
     - cmake --install build
+    - ${{ PYTHON }} -c "import sysconfig, os; open(os.path.join(sysconfig.get_path('purelib'), 'freecad-init.pth'), 'w').write('import freecad\n')"
 
 requirements:
   build:
