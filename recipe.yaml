@@ -1,5 +1,5 @@
 context:
-  version: "27.1.0dev"
+  version: "${{ env.get('FREECAD_VERSION') or fail('FREECAD_VERSION is not set') }}"
 
 package:
   name: freecad
