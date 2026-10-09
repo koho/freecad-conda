@@ -55,12 +55,11 @@ jobs:
         with:
           dotnet-version: '10.0.103'
 
-      - name: Fetch version
+      - name: Fetch FreeCAD version
+        shell: bash
         run: |
-          python3 -c "import os, urllib.request, tomllib; \
-          data = tomllib.loads(urllib.request.urlopen('https://raw.githubusercontent.com/FreeCAD/FreeCAD/refs/heads/main/pixi.toml').read().decode()); \
-          version = data['workspace']['version']; \
-          open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8').write(f'FREECAD_VERSION={version}dev\n')"
+          VERSION=$(curl -sSL https://raw.githubusercontent.com/FreeCAD/FreeCAD/refs/heads/main/pixi.toml | yq '.workspace.version' -p toml)
+          echo "FREECAD_VERSION=$VERSIONdev" >> $GITHUB_ENV
 
       - name: Build package
         shell: bash
