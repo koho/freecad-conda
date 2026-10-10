@@ -178,6 +178,7 @@ jobs:
 
       - name: Upload conda files
         uses: actions/upload-artifact@v4
+        working-directory: src/Tools/typing/generated
         with:
           name: conda
           path: output/**/*.conda
