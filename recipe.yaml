@@ -82,9 +82,9 @@ requirements:
     - gtest
     - ninja
     - noqt5
-    - python>=3.11,<3.12
-    - qt6-main>=6.8,<6.9
-    - swig>=4.3,<4.4
+    - python>=3.13,<3.14
+    - qt6-main>=6.11.3,<6.12
+    - swig
 
     - if: linux and x86_64
       then:
@@ -162,7 +162,7 @@ requirements:
 
   host:
     - av
-    - eigen >=3.3,<5
+    - eigen
     - fmt
     - expat
     - freetype
@@ -171,14 +171,14 @@ requirements:
     - libboost-devel
     - matplotlib-base
     - noqt5
-    - numpy>=1.26,<2
-    - occt>=7.8,<7.9
+    - numpy
+    - occt>=8.0,<8.1
     - pcl
     - ply
     - pybind11
     - pyside6
-    - python>=3.11,<3.12
-    - qt6-main>=6.8,<6.9
+    - python>=3.13,<3.14
+    - qt6-main>=6.11.3,<6.12
     - six
     - pip
     - smesh
@@ -218,8 +218,8 @@ requirements:
     - matplotlib-base
     - nine
     - noqt5
-    - numpy>=1.26,<2
-    - occt>=7.8,<7.9
+    - numpy
+    - occt>=8.0,<8.1
     - olefile
     - opencamlib
     - pandas
@@ -227,10 +227,10 @@ requirements:
     - ply
     - pycollada
     - pyside6
-    - python>=3.11,<3.12
+    - python>=3.13,<3.14
     - pythonocc-core
     - pyyaml
-    - qt6-main>=6.8,<6.9
+    - qt6-main>=6.11.3,<6.12
     - requests
     - scipy
     - sympy
