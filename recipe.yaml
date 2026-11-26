@@ -78,6 +78,7 @@ requirements:
     - ccache
     - cmake
     - compilers>=1.10,<1.11
+    - compiler-rt>=18.1.8,<22
     - doxygen
     - gtest
     - ninja
