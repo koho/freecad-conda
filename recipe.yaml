@@ -173,7 +173,7 @@ requirements:
     - matplotlib-base
     - noqt5
     - numpy
-    - occt>=7.8,<7.9
+    - occt==8.0.1
     - pcl
     - ply
     - pybind11
@@ -220,7 +220,7 @@ requirements:
     - nine
     - noqt5
     - numpy
-    - occt>=7.8,<7.9
+    - occt==8.0.1
     - olefile
     - opencamlib
     - pandas
