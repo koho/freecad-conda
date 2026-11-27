@@ -10,7 +10,7 @@ source:
   rev: 617ea1ffc8ac11ea49d54b1aa63470def8b849c3
 
 build:
-  number: 7
+  number: 8
   script:
     - if: unix
       then: |
@@ -173,7 +173,7 @@ requirements:
     - matplotlib-base
     - noqt5
     - numpy
-    - occt>=8.0,<8.1
+    - occt==8.0.1
     - pcl
     - ply
     - pybind11
@@ -220,7 +220,7 @@ requirements:
     - nine
     - noqt5
     - numpy
-    - occt>=8.0,<8.1
+    - occt==8.0.1
     - olefile
     - opencamlib
     - pandas
