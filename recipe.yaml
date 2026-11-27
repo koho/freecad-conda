@@ -10,7 +10,7 @@ source:
   rev: main
 
 build:
-  number: 5
+  number: 6
   script:
     - if: unix
       then: |
